@@ -33,8 +33,8 @@ def datetime64(
         seq: str,
 ) -> sa.types.TypeEngine:
     unit, timezone = _split_with_padding(seq, 2)
-    instance = types.DateTime64(int(unit), timezone)
-    return instance
+    obj = types.DateTime64(int(unit), timezone)
+    return obj
 
 
 def fixed_string(
@@ -47,16 +47,16 @@ def decimal(
         seq: str,
 ) -> sa.types.TypeEngine:
     precision, scale = seq.split(',', 1)
-    instance = types.Decimal(int(precision), int(scale))
-    return instance
+    obj = types.Decimal(int(precision), int(scale))
+    return obj
 
 
 def decimal256(
         seq: str,
 ) -> sa.types.TypeEngine:
     precision, scale = seq.split(',', 1)
-    instance = types.Decimal(int(precision), int(scale))
-    return instance
+    obj = types.Decimal(int(precision), int(scale))
+    return obj
 
 
 def array(
@@ -74,9 +74,9 @@ def tuple_(
 def map_(
         seq: str,
 ) -> sa.types.TypeEngine:
-    k, v = _split_skipping_parenthesis(seq)
-    instance = types.Map(_type_from_string(k), _type_from_string(v))
-    return instance
+    key, value = _split_skipping_parenthesis(seq)
+    obj = types.Map(_type_from_string(key), _type_from_string(value))
+    return obj
 
 
 def nullable(
@@ -101,15 +101,15 @@ def _type_from_string(
         seq: str,
 ) -> sa.types.TypeEngine:
     if seq in _types:
-        instance = _types[seq]
+        obj = _types[seq]
     else:
         for name, (i, func) in _type_funcs.items():
             if seq.startswith(name):
-                instance = func(seq[i:-1])
+                obj = func(seq[i:-1])
                 break
         else:
             raise ValueError(seq)
-    return instance
+    return obj
 
 
 def type_from_string(
