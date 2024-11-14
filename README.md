@@ -1,6 +1,6 @@
 # ClickHouse-Types
 
-Converting ClickHouse types into other schema types
+Converting ClickHouse types into other schemas' types
 
 ---
 
