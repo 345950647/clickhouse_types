@@ -1,5 +1,7 @@
 import pyarrow as pa
 
+from clickhouse_types._utils import _split_with_padding, _split_skipping_parenthesis
+
 _dtypes = {
     'Bool': pa.bool_(),
     'UInt8': pa.uint8(),
@@ -24,39 +26,6 @@ _dtypes = {
     'Int256': pa.binary(32),
     'UInt256': pa.binary(32),
 }
-
-
-def _split_skipping_parenthesis(
-        seq: str,
-        sep: str = ',',
-):
-    seqs = []
-    n = 0
-    i = 0
-    for j, s in enumerate(seq):
-        if s == '(':
-            n += 1
-        elif s == ')':
-            n -= 1
-        elif s == sep and not n:
-            seqs.append(seq[i:j])
-            i = j + 1
-    else:
-        seqs.append(seq[i:])
-    return seqs
-
-
-def _split_with_padding(
-        seq: str,
-        length: int,
-        sep: str = ',',
-):
-    seqs = seq.split(sep)
-    length -= len(seqs)
-    if length:
-        seqs += [None] * length
-    return seqs
-
 
 # https://clickhouse.com/docs/en/sql-reference/data-types/datetime64
 _units = {
