@@ -1,6 +1,6 @@
 import pyarrow as pa
 
-_arrow_types = {
+_dtypes = {
     'Bool': pa.bool_(),
     'UInt8': pa.uint8(),
     'Int8': pa.int8(),
@@ -143,7 +143,7 @@ def nullable(
     return _dtype_from_string(seq)
 
 
-_arrow_type_funcs = {
+_dtype_funcs = {
     'DateTime64(': (11, timestamp),
     'Decimal(': (8, decimal),
     'Decimal256(': (11, decimal256),
@@ -158,10 +158,10 @@ _arrow_type_funcs = {
 def _dtype_from_string(
         seq: str,
 ) -> pa.DataType:
-    if seq in _arrow_types:
-        dtype = _arrow_types[seq]
+    if seq in _dtypes:
+        dtype = _dtypes[seq]
     else:
-        for name, (i, func) in _arrow_type_funcs.items():
+        for name, (i, func) in _dtype_funcs.items():
             if seq.startswith(name):
                 dtype = func(seq[i:-1])
                 break
