@@ -8,18 +8,6 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.12"
 
-
-[[tool.poetry.source]]
-name = "tsinghua"
-url = "https://pypi.tuna.tsinghua.edu.cn/simple"
-priority = "primary"
-
-
-[[tool.poetry.source]]
-name = "pypiserver"
-url = "http://pypiserver:8080"
-priority = "supplemental"
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

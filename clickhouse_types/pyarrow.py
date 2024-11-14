@@ -77,8 +77,8 @@ def timestamp(
         seq: str,
 ) -> pa.DataType:
     unit, tz = _split_with_padding(seq, 2)
-    seq = pa.timestamp(_units[unit], tz)
-    return seq
+    dtype = pa.timestamp(_units[unit], tz)
+    return dtype
 
 
 def time32(
@@ -103,29 +103,29 @@ def decimal(
         seq: str,
 ) -> pa.DataType:
     precision, scale = seq.split(',', 1)
-    seq = pa.decimal128(int(precision), int(scale))
-    return seq
+    dtype = pa.decimal128(int(precision), int(scale))
+    return dtype
 
 
 def decimal256(
         seq: str,
 ) -> pa.DataType:
     precision, scale = seq.split(',', 1)
-    seq = pa.decimal256(int(precision), int(scale))
-    return seq
+    dtype = pa.decimal256(int(precision), int(scale))
+    return dtype
 
 
 def list_(
         seq: str,
 ) -> pa.DataType:
-    return pa.list_(_data_type_from_string(seq))
+    return pa.list_(_dtype_from_string(seq))
 
 
 def struct(
         seq: str,
 ) -> pa.DataType:
     return pa.struct(
-        [(f'f{y}', _data_type_from_string(z)) for y, z in enumerate(_split_skipping_parenthesis(seq), start=1)]
+        [(f'f{y}', _dtype_from_string(z)) for y, z in enumerate(_split_skipping_parenthesis(seq), start=1)]
     )
 
 
@@ -133,14 +133,14 @@ def map_(
         seq: str,
 ) -> pa.DataType:
     k, v = _split_skipping_parenthesis(seq)
-    seq = pa.map_(_data_type_from_string(k), _data_type_from_string(v))
-    return seq
+    dtype = pa.map_(_dtype_from_string(k), _dtype_from_string(v))
+    return dtype
 
 
 def nullable(
         seq: str,
 ) -> pa.DataType:
-    return _data_type_from_string(seq)
+    return _dtype_from_string(seq)
 
 
 _arrow_type_funcs = {
@@ -155,25 +155,25 @@ _arrow_type_funcs = {
 }
 
 
-def _data_type_from_string(
+def _dtype_from_string(
         seq: str,
 ) -> pa.DataType:
     if seq in _arrow_types:
-        seq = _arrow_types[seq]
+        dtype = _arrow_types[seq]
     else:
         for name, (i, func) in _arrow_type_funcs.items():
             if seq.startswith(name):
-                seq = func(seq[i:-1])
+                dtype = func(seq[i:-1])
                 break
         else:
             raise ValueError(seq)
-    return seq
+    return dtype
 
 
-def data_type_from_string(
+def dtype_from_string(
         seq: str,
 ) -> pa.DataType:
-    return _data_type_from_string(seq.replace(' ', ''))
+    return _dtype_from_string(seq.replace(' ', ''))
 
 
 def field_from_string(
@@ -189,11 +189,18 @@ def field_from_string(
                 break
     else:
         raise ValueError(seq)
-    x = pa.field(seq[i:j], data_type_from_string(seq[j + 1:]))
-    return x
+    field = pa.field(seq[i:j], dtype_from_string(seq[j + 1:]))
+    return field
 
 
 def schema_from_string(
         seq: str,
 ) -> pa.Schema:
     return pa.schema([field_from_string(x) for x in _split_skipping_parenthesis(seq)])
+
+
+__all__ = [
+    'dtype_from_string',
+    'field_from_string',
+    'schema_from_string',
+]
