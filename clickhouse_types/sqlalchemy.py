@@ -1,7 +1,7 @@
 import sqlalchemy as sa
 from clickhouse_sqlalchemy import types
 
-_arrow_types = {
+_dtypes = {
     'Bool': types.Boolean,
     'UInt8': types.UInt8,
     'Int8': types.Int8,
@@ -115,7 +115,7 @@ def nullable(
     return types.Nullable(_type_from_string(seq))
 
 
-_arrow_type_funcs = {
+_dtype_funcs = {
     'DateTime64(': (11, datetime64),
     'Decimal(': (8, decimal),
     'Decimal256(': (11, decimal256),
@@ -130,16 +130,16 @@ _arrow_type_funcs = {
 def _type_from_string(
         seq: str,
 ) -> sa.types.TypeEngine:
-    if seq in _arrow_types:
-        seq = _arrow_types[seq]
+    if seq in _dtypes:
+        instance = _dtypes[seq]
     else:
-        for name, (i, func) in _arrow_type_funcs.items():
+        for name, (i, func) in _dtype_funcs.items():
             if seq.startswith(name):
-                seq = func(seq[i:-1])
+                instance = func(seq[i:-1])
                 break
         else:
             raise ValueError(seq)
-    return seq
+    return instance
 
 
 def type_from_string(
