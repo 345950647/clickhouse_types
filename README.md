@@ -29,14 +29,14 @@ field_from_string('HelloWorld Map(UInt128, DateTime64(9, Asia/Shanghai))')
 ```python
 from clickhouse_types.pyarrow import schema_from_string
 
-schema_from_string('HelloWorld Map(UInt128, DateTime64(9, Asia/Shanghai))')
+schema_from_string('Hello FixedString(6), World Tuple(Int8, Int8)')
 ```
 
 ```
->>> HelloWorld: map<fixed_size_binary[16], timestamp[ns, tz=Asia/Shanghai]>
->>>   child 0, entries: struct<key: fixed_size_binary[16] not null, value: timestamp[ns, tz=Asia/Shanghai]> not null
->>>       child 0, key: fixed_size_binary[16] not null
->>>       child 1, value: timestamp[ns, tz=Asia/Shanghai]
+>>> Hello: fixed_size_binary[6]
+>>> World: struct<f1: int8, f2: int8>
+>>>   child 0, f1: int8
+>>>   child 1, f2: int8
 ```
 
 ## SQLAlchemy & ClickHouse-SQLAlchemy
