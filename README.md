@@ -2,9 +2,19 @@
 
 Converting ClickHouse types into other schemas' types
 
+## Installation
+
 ---
 
-## PyArrow
+```shell
+pip install clickhouse-types
+```
+
+## Usage
+
+---
+
+### PyArrow
 
 ```python
 from clickhouse_types.pyarrow import dtype_from_string
@@ -39,7 +49,7 @@ schema_from_string('Hello FixedString(6), World Tuple(Int8, Int8)')
 >>>   child 1, f2: int8
 ```
 
-## SQLAlchemy & ClickHouse-SQLAlchemy
+### SQLAlchemy & ClickHouse-SQLAlchemy
 
 ```python
 from clickhouse_types.sqlalchemy import type_from_string
