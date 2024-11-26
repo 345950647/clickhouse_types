@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "clickhouse-types"
 version = "0.1.1"
-description = ""
+description = "Converting ClickHouse types into other schemas' types"
 authors = ["Cheng Chang <cheng.chang3459@gmail.com>"]
 readme = "README.md"
 
